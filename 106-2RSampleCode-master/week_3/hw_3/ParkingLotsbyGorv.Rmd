@@ -1,0 +1,34 @@
+---
+title: "hw_3"
+output: html_document
+---
+
+```{r json}
+library(jsonlite)
+library(magrittr)
+library(dplyr)
+library(httr)
+
+json <- jsonlite::fromJSON("https://data.tycg.gov.tw/opendata/datalist/datasetMeta/download?id=f4cc0b12-86ac-40f9-8745-885bddc18f79&rid=0daad6e6-0632-44f5-bd25-5e1de1e9146f")
+```
+
+
+```{r calc}
+json$parkingLots$surplusSpace <- as.numeric(json$parkingLots$surplusSpace)
+json$parkingLots <- json$parkingLots %>%
+  filter(surplusSpace !="NA")
+```
+
+```{r onmap}
+library("ggmap") # 畫圖
+a <- json$parkingLots %>%
+    select(areaId,totalSpace, surplusSpace, wgsX, wgsY) %>%
+    group_by(areaId) %>%
+    mutate(emp = surplusSpace, tot = totalSpace, cars = (totalSpace-surplusSpace), Vacancy = emp/tot, lat = wgsY, lng = wgsX) %>%
+    arrange(desc(Vacancy))
+
+map <- get_map(location = c(lon = 121.30, lon = 24.96), zoom = 11, language = "zh-TW", maptype = "roadmap") #設定圖
+ggmap(map, darken = c(0.1, "white")) + geom_point(aes(x = lng, y = lat, col = Vacancy), data = a) + 
+  geom_point() + 
+    scale_colour_gradientn(colours=rainbow(3)) #彩色bar
+```
