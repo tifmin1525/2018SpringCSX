@@ -1,0 +1,63 @@
+---
+title: "RFacebook"
+output:
+  html_document: default
+  html_notebook: default
+---
+對台大出納組粉專進行詞頻分析
+```{r}
+library(Rfacebook)
+library(wordcloud2)
+library(magrittr)
+library(dplyr)
+library(jiebaR)
+library(jiebaRD)
+
+#fb_oauth <- fbOAuth(
+#  app_id = "125584644779971",                         
+#  app_secret = "0a0e8a552fd762b4f6eda05bdccd1ac6")    
+token  = "EAACEdEose0cBAAVNwdkJrbUxjPq0pA3OwsKw3N13VigtdiStGhUavce2yIWu9xBjZBxxyXFpTrNmEvSV8ZA1DfRXLbN47vBMOkaw8IWYw83PKZAeLhPGqWDhGVzp98ZB3ZBZBgG8VGiXShgPZBAqGE7Xyal7pAAX5ktDt9ZBzBu9yZBjSR1hh8dK06ES4xgkdbLcEAwQCLTYQZCgZDZD"
+
+#save(fb_oauth, file="fb_oauth")
+#load("fb_oauth")
+
+page <- getPage(page= "NtuCashier", token, n = 300)
+seq <- worker()
+a <- page$message
+a <- gsub("-","",a)
+a <- gsub("\n","",a)
+a <- gsub("的","",a)
+a <- gsub("了","",a)
+a <- gsub("我","",a)
+a <- gsub("是","",a)
+a <- gsub("在","",a)
+a <- gsub("有","",a)
+a <- gsub("也","",a)
+a <- gsub("和","",a)
+a <- gsub("就","",a)
+a <- gsub("會","",a)
+a <- gsub("你","",a)
+a <- gsub("但","",a)
+a <- gsub("都","",a)
+a <- gsub("不","",a)
+a <- gsub("可以","",a)
+a <- gsub("妳","",a)
+a <- gsub("要","",a)
+a <- gsub("再","",a)
+a <- gsub("為","",a)
+a <- gsub("到","",a)
+a <- gsub(" ","",a)
+a <- gsub("因為","",a)
+a <- gsub("不過","",a)
+a <- gsub("[A-Za-z0-9]","",a)
+
+freq <- seq[a]
+freq <- freq(freq)
+freq <- freq %>%
+  arrange(desc(freq)) %>%
+  head(100)
+wordcloud2(freq,size = 0.5)
+
+```
+可以看出台大出納組粉專老編真的很會講廢話（我都挑掉這麼多無義字了ＸＤ），同時也很關心大家選課的情況，還有期中考，學分等等，不過最主要還是在用在提醒大家的繳費。
+
