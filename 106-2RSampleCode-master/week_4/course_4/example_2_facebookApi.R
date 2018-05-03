@@ -1,6 +1,6 @@
 library(httr)
 
-token  = ""
+token  = "EAACEdEose0cBAAVNwdkJrbUxjPq0pA3OwsKw3N13VigtdiStGhUavce2yIWu9xBjZBxxyXFpTrNmEvSV8ZA1DfRXLbN47vBMOkaw8IWYw83PKZAeLhPGqWDhGVzp98ZB3ZBZBgG8VGiXShgPZBAqGE7Xyal7pAAX5ktDt9ZBzBu9yZBjSR1hh8dK06ES4xgkdbLcEAwQCLTYQZCgZDZD"
 prefex = "https://graph.facebook.com/v2.12/DoctorKoWJ/?fields=posts&access_token="
 url    = paste0(prefex, token)
 res    = httr::GET(url)
